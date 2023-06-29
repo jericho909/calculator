@@ -13,12 +13,14 @@ fn main() {
     println!("Very limited magic.");
     println!("Like only 4 operations. And for two numbers only. Sorry.");
     println!("But you can memorize them. Then it is infinite, right?");
+    println!("Also the number has to be a float. Like 45.0 or 10.8.");
+    println!("We have all kinds of limitations around here.");
 
     loop {
-        println!("Please enter the first number:");
+        println!("Please enter the first number: ");
         let mut input1 = String::new();
         io::stdin().read_line(&mut input1).expect("Failed to read line");
-        let parsed_input1: Result<i128, _> = input1.trim().parse();
+        let parsed_input1: Result<f64, _> = input1.trim().parse();
         let number1 = match parsed_input1 {
             Ok(number) => {
                 println!("The first number you entered is: {}", number);
@@ -33,7 +35,7 @@ fn main() {
         println!("Please enter the second number:");
         let mut input2 = String::new();
         io::stdin().read_line(&mut input2).expect("Failed to read line");
-        let parsed_input2: Result<i128,_> = input2.trim().parse();
+        let parsed_input2: Result<f64,_> = input2.trim().parse();
         let number2 = match parsed_input2 {
             Ok(number) => {
                 println!("The second number you entered is: {}", number);
@@ -72,31 +74,42 @@ fn main() {
         } else {
             println!("Invalid operation");
         }
+        loop {
+            println!("Please enter 'q' to quit or 'c' to continue.");
 
-        println!("Do you want to continue (c) or quit (q)?");
-        let mut state = String::new();
-        io::stdin().read_line(&mut state).expect("Failed to read line");
+            let mut input_2 = String::new();
+            io::stdin()
+                .read_line(&mut input_2)
+                .expect("Failed to read line");
 
-        match state.trim() {
-            "c" => continue, 
-            "q" => break,    
-            _ => {
-                println!("Invalid choice. Quitting!");
-                break; 
+            let trimmed_input = input_2.trim();
+
+            match trimmed_input {
+                "q" => {
+                    println!("Closing the program.");
+                    return;
+                }
+                "c" => {
+                    break;
+                }
+                
+                _ => {
+                    println!("Invalid input. Please try again.");
+                    println!("(Did you enter something other than 'q' or 'c' ?)");
+                }
             }
         }
-    }
 
-    println!("Thank you for using the calculator. Goodbye!");
+    }
 }
 
-fn perform_operation(operator: Operations, number1: i128, number2: i128) -> Option<i128> {
+fn perform_operation(operator: Operations, number1: f64, number2: f64) -> Option<f64> {
     match operator {
         Operations::Add => Some(number1 + number2),
         Operations::Subtract => Some(number1 - number2),
         Operations::Multiply => Some(number1 * number2),
         Operations::Divide => {
-            if number2 != 0 {
+            if number2 != 0.0 {
                 Some(number1 / number2)
             } else {
                 None
